@@ -23,6 +23,18 @@ class Product{
         return name;
     }
 
+    public void setCost(int cost) {
+        this.cost = cost;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString() {
         return "{" +

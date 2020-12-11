@@ -27,13 +27,8 @@ public class ProductRepository {
         return Collections.unmodifiableList(productList);
     }
 
-    public Product getProductOnId(Long id){
-        for (Product p : productList) {
-            if (p.getId() == id){
-                return p;
-            }
-        }
-        throw new RuntimeException();
+    public void addProduct(Product product){
+        productList.add(product);
     }
 }
 

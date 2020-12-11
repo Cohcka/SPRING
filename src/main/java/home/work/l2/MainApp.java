@@ -1,45 +1,25 @@
 package home.work.l2;
 
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import com.sun.javaws.Launcher;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.webapp.WebAppContext;
+import java.net.URL;
+import java.security.ProtectionDomain;
 
-import java.util.List;
-import java.util.Scanner;
 
 public class MainApp {
-    private static Scanner scanner;
-    public static void main(String[] args) {
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        Cart cart = context.getBean("cart", Cart.class);
-        context.close();
+    public static void main(String[] args) throws Exception {
+        Server server = new Server(8080);
 
-        scanner = new Scanner(System.in);
+        ProtectionDomain domain = Launcher.class.getProtectionDomain();
+        URL location = domain.getCodeSource().getLocation();
 
-        while(true) {
-            String[] cmd = scanner.nextLine().split(" ", 2);
-            switch (cmd[0]) {
-                case ("add"):
-                    cart.addInCart(Long.parseLong(cmd[1]));
-                    break;
-                case ("remove"):
-                    cart.pullOutCart(Long.parseLong(cmd[1]));
-                    break;
-                case("show"):
-                    if (cmd[1].equals("cart")){
-                        List<Product> tmpList = cart.showCart();
-                        for (Product p:tmpList) {
-                            System.out.println(p.toString());
-                        }
-                        break;
-                    } else if (cmd[1].equals("stock")) {
-                        List<Product> tmpList = cart.showStock();
-                        for (Product p : tmpList) {
-                            System.out.println(p.toString());
-                        }
-                        break;
-                    }
-                default:
-                    System.out.println("incorrect command");
-            }
-        }
+        WebAppContext webAppContext = new WebAppContext();
+        webAppContext.setContextPath("/app");
+        webAppContext.setWar(location.toExternalForm());
+
+        server.setHandler(webAppContext);
+        server.start();
+        server.join();
     }
 }
